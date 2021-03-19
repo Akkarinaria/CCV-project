@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="selected songs from songTable aura component">
+    <aura:attribute name="selectedSongsList" type="List"/>
+    <aura:attribute name="selectedCount" type="Integer"/>
+    <aura:attribute name="selectedLength" type="Double"/>
+</aura:event>

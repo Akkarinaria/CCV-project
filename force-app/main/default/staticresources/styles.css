@@ -1,0 +1,78 @@
+.bg-color {
+    background-color: rgb(250,250,249);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.error-box {
+    margin-top: 15px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    padding-bottom:20px;
+}
+
+/* Mix Details section */
+.section {
+    width: 100%;
+    background-color:rgb(240,214,190);
+}
+
+.mix-details_flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.red-block {
+    width: 6px;
+    height: 20px;
+    background-color: red;
+}
+
+.red-star {
+    color: red;
+    font-size: 20px;
+    vertical-align: center;
+}
+
+.mix-details_flex div {
+    display: flex;
+    align-items: center;
+    margin-right: 3px;
+}
+
+.required {
+    font-size: 16px;
+}
+
+#showErrorCustomerMessage {
+ 	color: #c23934;    
+    font-size: 12px;
+}
+
+/* Mix Summary section */
+.mix-sum_flex {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Songs section */
+
+#showUpdateSummaryMessage {
+    font-size: 16px;
+}

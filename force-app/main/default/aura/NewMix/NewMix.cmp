@@ -1,0 +1,96 @@
+<aura:component controller="NewMixController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+    <!-- styles.css -->
+    <ltng:require styles="{! $Resource.styles}"/>
+    
+    <!-- aura attributes --> 
+    <aura:attribute name="selectedLookUpContact" type="Contact" default="{}"/>
+    <aura:attribute name="newMix" type="Mix__c" default="{ 'sobjectType': 'Mix__c', 'Name':'' }" />
+    <aura:attribute name="selectedSongsListFromEvent" type="List"/>
+    <aura:attribute name="selectedCountFromEvent" type="Integer"/>
+    <aura:attribute name="selectedLengthFromEvent" type="Double"/>
+    <aura:attribute name="showErrorCustomerMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorNameMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorTrackCountMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorMixLengthMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorSongLimitMessage" type="Boolean" default="false"/>
+    <aura:attribute name="listOfSongLimit" type="List"/>
+    <aura:attribute name="showErrorBox" type="Boolean" default="false"/>
+    
+    <aura:handler name="selectedSongsEvent" event="c:selectedSongsListEvent" action="{!c.handleSelectedSongsEvent}"/>
+    
+    <div class="bg-color">
+        <!-- Header -->
+        <c:NewMixHeader/>
+        
+        <aura:if isTrue="{!v.showErrorBox}">
+        	<div class="container error-box">
+                <ui:message title="Errors" severity="error" closable="true">
+                    <aura:if isTrue="{!v.showErrorNameMessage}">
+                        <p>- Mix Name: You must enter a value.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorCustomerMessage}">
+                        <p>- Customer: You must enter a value.</p>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.showErrorTrackCountMessage}">
+                        <p>- Track Count: Reduce number of songs. No more than 20.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorMixLengthMessage}">
+                        <p>- Mix Length: Reduce summary length of songs. No more than 90.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorSongLimitMessage}">
+                        <p>List of selected songs, where track licenses are over:</p>
+                        <aura:iteration items="{!v.listOfSongLimit}" var="song">
+                            <p>--- Song Name: <b>{!song.Name}</b>, Genre: <b>{!song.Genre__c}</b>, Length (m): <b>{!song.Length_m__c}</b></p>
+                        </aura:iteration>
+                    </aura:if>
+                </ui:message>
+        	</div>
+        </aura:if>
+
+        <div class="button-container">
+            <lightning:button label="Save" onclick="{!c.handleCreateMix}" variant="brand" class="slds-m-top_medium"/>
+            <div style="width: 30px"></div>
+            <lightning:button label="Cancel" onclick="{!c.handleCloseMix}" variant="brand" class="slds-m-top_medium"/>
+        </div>
+        
+        
+        <!-- Mix Details section -->
+        <section id="mix-details">
+            <div class="section">
+                <div class="container">
+                    <div class="mix-details_flex">
+                        <h2 class="section-title">Mix Details</h2>
+                        <div>
+                            <!--<div class="red-block"></div>-->
+                            <span class="red-star">*</span>
+                            <span class="required">= Required Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <lightning:layout>
+                    
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <lightning:input aura:id="mix"
+                                         label="Mix Name"
+                                         value="{!v.newMix.Name}"
+                                         required="true"/>
+                        
+                    </lightning:layoutItem> 
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <c:CustomLookUpNew IconName="standard:contact" label="* Customer" selectedRecord="{!v.selectedLookUpContact}"/>
+                        <aura:if isTrue="{!v.showErrorCustomerMessage}">
+                            <span id="showErrorCustomerMessage">Error: You must enter a value</span>
+                        </aura:if>
+                    </lightning:layoutItem>
+                </lightning:layout>
+        </section>
+        <c:SongsTable/>
+        <div class="button-container">
+            <lightning:button label="Save" onclick="{!c.handleCreateMix}" variant="brand" class="slds-m-top_medium"/>
+            <div style="width: 30px"></div>
+            <lightning:button label="Cancel" onclick="{!c.handleCloseMix}" variant="brand" class="slds-m-top_medium"/>
+        </div>
+    </div>
+</aura:component>

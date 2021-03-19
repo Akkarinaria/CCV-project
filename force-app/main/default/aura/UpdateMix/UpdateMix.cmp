@@ -1,0 +1,114 @@
+<aura:component controller="UpdateMixController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+    <!-- styles.css -->
+    <ltng:require styles="{! $Resource.styles}"/>
+    
+    <!-- aura attributes --> 
+    <aura:attribute name="selectedLookUpRecord" type="Contact" default="{'Id':''}"/>
+    <aura:attribute name="updateMix" type="Mix__c" default="{ 'sobjectType': 'Mix__c', 'Customer__c':'' }" />
+    <aura:attribute name="showErrorCustomerMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorNameMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorTrackCountMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorMixLengthMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showErrorSongLimitMessage" type="Boolean" default="false"/>
+    <aura:attribute name="listOfSongLimit" type="List"/>
+    <aura:attribute name="showErrorBox" type="Boolean" default="false"/>
+    <aura:attribute name="nullValue" type="Integer" default="0"/>
+    
+    <aura:attribute name="selectedSongsListFromEvent" type="List"/>
+    <aura:attribute name="selectedCountFromEvent" type="Integer"/>
+    <aura:attribute name="selectedLengthFromEvent" type="Double"/> 
+    
+    <aura:registerEvent name="appEvent" type="c:PassMixIdEvent"/>
+    <aura:handler name="selectedSongsEvent" event="c:selectedSongsListEvent" action="{!c.handleSelectedSongsEvent}"/>
+    
+    <!-- call init and doInit method on component load -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <div class="bg-color">
+        
+        <!-- PAGE HEADER -->
+        <lightning:layout class="slds-page-header slds-page-header_object-home">
+            <lightning:layoutItem>
+                <lightning:icon iconName="custom:custom49" alternativeText="Mix Builder"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small">
+                <div class="page-section page-header">
+                    <h1 class="slds-text-heading_label">Mix Builder</h1>
+                    <h2 class="slds-text-heading_medium">{!v.updateMix.Name}</h2>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <!-- / PAGE HEADER -->
+        
+        <aura:if isTrue="{!v.showErrorBox}">
+        	<div class="container error-box">
+                <ui:message title="Errors" severity="error" closable="true">
+                    <aura:if isTrue="{!v.showErrorNameMessage}">
+                        <p>- Mix Name: You must enter a value.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorCustomerMessage}">
+                        <p>- Customer: You must enter a value.</p>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.showErrorTrackCountMessage}">
+                        <p>- Track Count: Reduce number of songs. No more than 20.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorMixLengthMessage}">
+                        <p>- Mix Length: Reduce summary length of songs. No more than 90.</p>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showErrorSongLimitMessage}">
+                        <p>List of selected songs, where track licenses are over:</p>
+                        <aura:iteration items="{!v.listOfSongLimit}" var="song">
+                            <p>--- Song Name: <b>{!song.Name}</b>, Genre: <b>{!song.Genre__c}</b>, Length (m): <b>{!song.Length_m__c}</b></p>
+                        </aura:iteration>
+                    </aura:if>
+                </ui:message>
+        	</div>
+        </aura:if>
+
+        <div class="button-container">
+            <lightning:button label="Save" onclick="{!c.handleUpdateMix}" variant="brand" class="slds-m-top_medium"/>
+            <div style="width: 30px"></div>
+            <lightning:button label="Cancel" onclick="{!c.handleCloseMix}" variant="brand" class="slds-m-top_medium"/>
+        </div>
+        
+        
+        <!-- Mix Details section -->
+        <section id="mix-details">
+            <div class="section">
+                <div class="container">
+                    <div class="mix-details_flex">
+                        <h2 class="section-title">Mix Details</h2>
+                        <div>
+                            <!--<div class="red-block"></div>-->
+                            <span class="red-star">*</span>
+                            <span class="required">= Required Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <lightning:layout>
+                    
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <lightning:input aura:id="mix"
+                                         label="Mix Name"
+                                         value="{!v.updateMix.Name}"
+                                         required="true"/>
+                        
+                    </lightning:layoutItem> 
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <c:CustomLookUp objectAPIName="contact" IconName="standard:contact" selectedRecord="{!v.selectedLookUpRecord}" label="* Customer"/>
+                        <aura:if isTrue="{!v.showErrorCustomerMessage}">
+                            <span id="showErrorCustomerMessage">Error: You must enter a value</span>
+                        </aura:if>
+                    </lightning:layoutItem>
+                </lightning:layout>
+        </section>
+        <c:UpdateSongTable/>
+        <div class="button-container">
+            <lightning:button label="Save" onclick="{!c.handleUpdateMix}" variant="brand" class="slds-m-top_medium"/>
+            <div style="width: 30px"></div>
+            <lightning:button label="Cancel" onclick="{!c.handleCloseMix}" variant="brand" class="slds-m-top_medium"/>
+        </div>
+    </div>
+</aura:component>
